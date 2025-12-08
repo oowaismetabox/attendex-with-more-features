@@ -7,7 +7,7 @@ import { signOut, getCurrentUser, isAuthenticated } from "@/lib/auth";
 import toast, { Toaster } from "react-hot-toast";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
-import './attendance.css';
+// import './attendance.css';
     
 interface Record {
   id: number;
@@ -53,14 +53,24 @@ export default function SyntheticRecordsPage() {
   const [editZohoSyncError, setEditZohoSyncError] = useState("");
   const [editPairedWith, setEditPairedWith] = useState<number | null>(null);
 
-  // Check authentication on mount
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/login");
-    } else {
-      setCurrentUser(getCurrentUser());
+useEffect(() => {
+  if (!isAuthenticated()) {
+    router.push("/login");
+  } else {
+    setCurrentUser(getCurrentUser());
+
+    const hasReloaded = sessionStorage.getItem("has-reloaded");
+    if (!hasReloaded) {
+      sessionStorage.setItem("has-reloaded", "true");
+      window.location.reload();
     }
-  }, [router]);
+  }
+}, [router]);
+useEffect(() => {
+  return () => {
+    sessionStorage.removeItem("has-reloaded");
+  };
+}, [router]);
 
   // ---------------- Fetch Records with Pagination ----------------
   async function fetchRecords(page: number = 1, append: boolean = false) {

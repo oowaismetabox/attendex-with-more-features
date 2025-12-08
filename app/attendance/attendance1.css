@@ -264,6 +264,8 @@
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .btn-primary:hover {
@@ -283,7 +285,11 @@
   transform: none;
   opacity: 0.6;
 }
-
+.load-more-container {
+  text-align: center;
+  margin-top: 16px;
+  margin-bottom: 5px;
+}
 .btn-delete {
   padding: 12px 18px;
   background-color: #dc2626;
@@ -362,6 +368,11 @@
   cursor: not-allowed;
   transform: none;
   opacity: 0.5;
+}
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 /* Table Styles */

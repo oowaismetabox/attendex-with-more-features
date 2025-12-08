@@ -141,7 +141,7 @@ export default function LoginPage() {
         toast.success("Login successful!");
         
         setTimeout(() => {
-          router.push("/superuser");
+          router.push(`/superuser?timestamp=${Date.now()}`);
         }, 500);
       } else {
         toast.error("Incorrect password");

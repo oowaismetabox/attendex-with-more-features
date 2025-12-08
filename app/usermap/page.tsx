@@ -26,15 +26,32 @@ export default function Home() {
   });
   const [editUserId, setEditUserId] = useState<number | null>(null);
 
-  // Check authentication on mount
-  useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/login");
-    } else {
-      setCurrentUser(getCurrentUser());
-    }
-  }, [router]);
+  // // Check authentication on mount
+  // useEffect(() => {
+  //   if (!isAuthenticated()) {
+  //     router.push("/login");
+  //   } else {
+  //     setCurrentUser(getCurrentUser());
+  //   }
+  // }, [router]);
+useEffect(() => {
+  if (!isAuthenticated()) {
+    router.push("/login");
+  } else {
+    setCurrentUser(getCurrentUser());
 
+    const hasReloaded = sessionStorage.getItem("has-reloaded");
+    if (!hasReloaded) {
+      sessionStorage.setItem("has-reloaded", "true");
+      window.location.reload();
+    }
+  }
+}, [router]);
+useEffect(() => {
+  return () => {
+    sessionStorage.removeItem("has-reloaded");
+  };
+}, [router]);
   // ---------------- Fetch People ----------------
   async function fetchPeople() {
     const { data, error } = await supabase.from("metapeople").select("*").order("user_id", { ascending: true });
