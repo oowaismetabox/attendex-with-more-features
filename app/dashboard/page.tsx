@@ -15,25 +15,27 @@ const UsermapPage = lazy(() => import('@/app/usermap/page'));
 export default function Home() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState('attendance');
-
   const [isClient, setIsClient] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
-
+  const [pageLoaded, setPageLoaded] = useState(false);
   // Check authentication and load last opened page (only on client side)
   useEffect(() => {
-    if (!isAuthenticated()) {
-      router.push("/login");
-      return;
-    }
+  if (!isAuthenticated()) {
+    router.push("/login");
+    return;
+  }
 
-    setIsClient(true);
-    setCurrentUser(getCurrentUser());
-    // Hardcode to 'attendance' by default
-    setCurrentPage('attendance');
-  }, [router]);
-
+  setIsClient(true);
+  setCurrentUser(getCurrentUser());
+  
+  // Always start on attendance page (hardcoded)
+  setCurrentPage('attendance');
+  localStorage.setItem('currentPage', 'attendance');
+  setPageLoaded(true);
+}, [router]);
   // Save the clicked page
   const handlePageChange = (page: string) => {
+    console.log('Changing page to:', page); // Debug log
     setCurrentPage(page);
     localStorage.setItem('currentPage', page);
   };
@@ -52,6 +54,7 @@ export default function Home() {
     if (confirm.isConfirmed) {
       signOut();
       toast.success("Signed out successfully");
+      localStorage.removeItem('currentPage'); // Clear saved page on logout
       setTimeout(() => router.push("/login"), 1000);
     }
   }
@@ -104,16 +107,10 @@ export default function Home() {
       {/* Main Content */}
       <main className="mainContent">
         <div className="pageContainer">
-          {currentPage === 'attendance' && (
-            <Suspense fallback={<div className="loadingState">Loading...</div>}>
-              <AttendancePage />
-            </Suspense>
-          )}
-          {currentPage === 'usermap' && (
-            <Suspense fallback={<div className="loadingState">Loading...</div>}>
-              <UsermapPage />
-            </Suspense>
-          )}
+          <Suspense fallback={<div className="loadingState">Loading...</div>}>
+            {currentPage === 'attendance' && <AttendancePage />}
+            {currentPage === 'usermap' && <UsermapPage />}
+          </Suspense>
         </div>
       </main>
     </div>

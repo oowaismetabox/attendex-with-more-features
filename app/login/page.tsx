@@ -62,7 +62,7 @@ export default function LoginPage() {
         <div className="login-card">
           <div className="login-header">
             <h2>Welcome Back</h2>
-            <p>Sign in to Meta-black Management</p>
+            <p>Sign in to Attendex</p>
           </div>
 
           <form onSubmit={handleLogin} className="login-form">

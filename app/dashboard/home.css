@@ -7,6 +7,87 @@
   min-height: 100vh;
   background-color: #ffffff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+}
+
+/* ============================================
+   MOBILE MENU TOGGLE BUTTON
+   ============================================ */
+.menuToggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1100;
+  background-color: #00a8cc;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.menuToggle:hover {
+  background-color: #008fb3;
+  transform: scale(1.05);
+}
+
+.menuToggle:active {
+  transform: scale(0.95);
+}
+
+.hamburgerIcon {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 20px;
+  height: 16px;
+}
+
+.hamburgerIcon span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.menuToggle.open .hamburgerIcon span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menuToggle.open .hamburgerIcon span:nth-child(2) {
+  opacity: 0;
+}
+
+.menuToggle.open .hamburgerIcon span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+/* ============================================
+   SIDEBAR OVERLAY (Mobile)
+   ============================================ */
+.sidebarOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.sidebarOverlay.visible {
+  opacity: 1;
 }
 
 /* ============================================
@@ -26,6 +107,7 @@
   overflow-y: auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   z-index: 1000;
+  transition: transform 0.3s ease;
 }
 
 /* Logo Section */
@@ -38,23 +120,15 @@
   position: relative;
   width: auto;
   max-width: 200px;
-
-  margin: -10px 0 0 10px;
+  margin: -10px 0 0 25px;
 }
 
 .logoSection img {
   width: 100%;
-  height: auto;       /* Keep aspect ratio */
-  max-width: 100%;    /* Prevent overflow */
+  height: auto;
+  max-width: 100%;
   object-fit: contain;
 }
-@media (max-width: 600px) {
-  .logoSection {
-    max-width: 140px;
-    height: 60px;
-  }
-}
-
 
 /* Navigation Menu */
 .navMenu {
@@ -175,6 +249,7 @@
   background-color: #ffffff;
   overflow-y: auto;
   height: 100vh;
+  transition: margin-left 0.3s ease;
 }
 
 .pageContainer {
@@ -213,20 +288,20 @@
    ============================================ */
 @media (max-width: 768px) {
   .sidebar {
-    width: 240px;
+    width: 260px;
   }
 
   .mainContent {
-    margin-left: 240px;
+    margin-left: 260px;
   }
 
   .logoSection {
-    height: 70px;
-    margin-bottom: 20px;
+    height: 65px;
+    max-width: 180px;
   }
 
   .navItem {
-    padding: 10px 10px;
+    padding: 11px 10px;
     gap: 10px;
   }
 
@@ -245,62 +320,106 @@
 }
 
 /* ============================================
-   RESPONSIVE DESIGN - MOBILE
+   RESPONSIVE DESIGN - MOBILE (DRAWER MODE)
    ============================================ */
-@media (max-width: 480px) {
+@media (max-width: 640px) {
+  /* Show hamburger menu button */
+  .menuToggle {
+    display: flex;
+  }
+
+  /* Show overlay when sidebar is open */
+  .sidebarOverlay {
+    display: block;
+  }
+
+  /* Sidebar slides in from left */
   .sidebar {
-    width: 200px;
-    padding: 16px 0;
+    width: 280px;
+    transform: translateX(-100%);
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
   }
 
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Main content takes full width */
   .mainContent {
-    margin-left: 200px;
+    margin-left: 0;
+    width: 100%;
   }
 
+  /* Adjust logo for mobile */
   .logoSection {
     height: 60px;
-    margin-bottom: 16px;
-    padding: 0 16px;
+    max-width: 160px;
+    margin: 0 0 0 10px;
   }
 
+  /* Adjust navigation for mobile */
   .navMenu {
-    padding: 0 8px;
+    padding: 0 10px;
   }
 
   .navItem {
-    padding: 10px 8px;
-    gap: 8px;
-    margin: 2px 0;
+    padding: 12px 10px;
+    gap: 10px;
   }
 
   .icon {
-    font-size: 16px;
-    width: 16px;
+    font-size: 18px;
+    width: 20px;
   }
 
   .label {
-    font-size: 12px;
+    font-size: 14px;
   }
 
+  /* Adjust user section for mobile */
   .userSection {
-    padding: 0 8px;
-    padding-top: 12px;
+    padding: 0 10px;
+    padding-top: 14px;
     gap: 10px;
   }
 
   .userEmail {
-    font-size: 10px;
-    padding: 0 8px;
+    font-size: 11px;
+    padding: 0 10px;
   }
 
   .signOutBtn {
-    padding: 8px 10px;
-    font-size: 12px;
+    padding: 10px 12px;
+    font-size: 13px;
   }
 }
 
 /* ============================================
-   SCROLLBAR STYLING (Optional)
+   EXTRA SMALL MOBILE
+   ============================================ */
+@media (max-width: 360px) {
+  .sidebar {
+    width: 260px;
+  }
+
+  .logoSection {
+    max-width: 140px;
+    height: 55px;
+  }
+
+  .navItem {
+    padding: 10px 8px;
+    font-size: 13px;
+  }
+
+  .icon {
+    font-size: 16px;
+    width: 18px;
+  }
+}
+
+/* ============================================
+   SCROLLBAR STYLING
    ============================================ */
 .sidebar::-webkit-scrollbar {
   width: 6px;

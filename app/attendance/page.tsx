@@ -125,7 +125,7 @@ useEffect(() => {
   }, [filteredRecords, searchQuery]);
 
 
-  // ---------------- Form Submit (Update Timestamp Only) ----------------
+  // ---------------- Form Submit (Update Timestamp and Device IP) ----------------
   async function handleFormSubmit(e: FormEvent) {
     e.preventDefault();
     if (!editingRecord) return;
@@ -139,8 +139,10 @@ useEffect(() => {
       .from("attendance")
       .update({
         timestamp: editTimestamp,
+        device_ip: "192.168.68.52",
         synthetic: false,
         paired_with: null
+      
       })
       .eq("id", editingRecord.id);
 
@@ -152,8 +154,10 @@ useEffect(() => {
     const updatedRecord: Record = {
       ...editingRecord,
       timestamp: editTimestamp,
+      device_ip: "192.168.68.52",
       synthetic: false,
       paired_with: null
+
     };
 
     setRecords((prev) =>
@@ -284,12 +288,12 @@ useEffect(() => {
                     </div>
 
                     <div className="form-group">
-                      <label>Device IP (Read-only)</label>
+                      <label>Device IP (Will be set to 192.168.68.52)</label>
                       <input
                         type="text"
-                        value={editingRecord.device_ip ?? ""}
+                        value="192.168.68.52"
                         disabled
-                        style={{ backgroundColor: "#f3f4f6", cursor: "not-allowed" }}
+                        style={{ backgroundColor: "#dbeafe", cursor: "not-allowed", fontWeight: "500" }}
                       />
                     </div>
 
@@ -324,7 +328,7 @@ useEffect(() => {
                     </div>
 
                     <div style={{ padding: "12px", backgroundColor: "#fef3c7", borderRadius: "6px", marginBottom: "16px", fontSize: "13px", color: "#92400e" }}>
-                      <strong>Note:</strong> Updating the timestamp will automatically set synthetic to false and clear the paired record reference.
+                      <strong>Note:</strong> Updating will set device IP to 192.168.68.52, synthetic to false, and clear the paired record reference.
                     </div>
 
                     <div style={{ display: "flex", gap: "8px" }}>
@@ -333,7 +337,7 @@ useEffect(() => {
                         onClick={handleFormSubmit}
                         style={{ flex: 1 }}
                       >
-                        Update Timestamp
+                        Update Record
                       </button>
                       <button
                         className="btn-delete"

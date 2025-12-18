@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 // import "./attendance/attendance1.css";
 // import "./superuser/attendance.css";
 export const metadata: Metadata = {
-  title: "Next App with Supabase",
+  title: "Attendex",
 };
 
 // export default function RootLayout({ children }: { children: React.ReactNode }) {

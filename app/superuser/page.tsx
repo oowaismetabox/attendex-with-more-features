@@ -123,6 +123,72 @@ export default function SyntheticRecordsPage() {
     }
   }, [filteredRecords, searchQuery]);
 
+  // ---------------- Export to CSV ----------------
+  function handleExportToCSV() {
+    if (displayedRecords.length === 0) {
+      toast.error("No records to export");
+      return;
+    }
+
+    // Define CSV headers
+    const headers = [
+      "ID",
+      "User ID",
+      "Timestamp",
+      "Device IP",
+      "Check Type",
+      "Synthetic",
+      "Paired With",
+      "Synced to Zoho",
+      "Synced At",
+      "Zoho Sync Error"
+    ];
+
+    // Convert records to CSV rows
+    const csvRows = displayedRecords.map(record => [
+      record.id,
+      record.user_id ?? "",
+      record.timestamp ? new Date(record.timestamp).toISOString() : "",
+      record.device_ip ?? "",
+      record.check_type ?? "",
+      record.synthetic ? "true" : "false",
+      record.paired_with ?? "",
+      record.synced_to_zoho ? "true" : "false",
+      record.synced_at ? new Date(record.synced_at).toISOString() : "",
+      record.zoho_sync_error ?? ""
+    ]);
+
+    // Combine headers and rows
+    const csvContent = [
+      headers.join(","),
+      ...csvRows.map(row => 
+        row.map(cell => {
+          const cellStr = String(cell);
+          // Escape quotes and wrap in quotes if contains comma, quote, or newline
+          if (cellStr.includes(",") || cellStr.includes('"') || cellStr.includes("\n")) {
+            return `"${cellStr.replace(/"/g, '""')}"`;
+          }
+          return cellStr;
+        }).join(",")
+      )
+    ].join("\n");
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute("href", url);
+    link.setAttribute("download", `attendance_records_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.style.visibility = "hidden";
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    toast.success(`Exported ${displayedRecords.length} records to CSV`);
+  }
+
   // ---------------- Form Submit (Update All Attributes Except ID) ----------------
   async function handleFormSubmit(e: FormEvent) {
     e.preventDefault();
@@ -394,12 +460,31 @@ export default function SyntheticRecordsPage() {
                       />
                       <span className="search-icon">🔍</span>
                     </div>
-                    {selectedIds.length > 0 && (
-                      <button className="btn-delete with-badge" onClick={handleDeleteSelected}>
-                        <span>🗑️ Delete Selected</span>
-                        <span className="delete-badge">{selectedIds.length}</span>
+                    
+                    <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                      <button 
+                        className="btn-primary" 
+                        onClick={handleExportToCSV}
+                        style={{
+                          padding: "12px 18px",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          whiteSpace: "nowrap",
+                          margin: 0
+                        }}
+                      >
+                        <span>📥</span>
+                        <span>Export to CSV</span>
                       </button>
-                    )}
+                      
+                      {selectedIds.length > 0 && (
+                        <button className="btn-delete with-badge" onClick={handleDeleteSelected}>
+                          <span>🗑️ Delete Selected</span>
+                          <span className="delete-badge">{selectedIds.length}</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
